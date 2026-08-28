@@ -1,0 +1,91 @@
+# OverTheWire: Bandit Wargame Writeup
+**Levels 0 through 10**
+
+## Level 0
+**Command:**
+`ssh bandit0@bandit.labs.overthewire.org -p 2220`
+
+**Explanation:** 
+This level was just about learning how to log into the game server using Secure Shell (SSH). I had to use the `-p 2220` flag because the server uses port 2220 instead of the default SSH port (which is 22).
+
+## Level 0 -> Level 1
+**Command:**
+`cat readme`
+
+**Explanation:** 
+Once I was logged in, I used `cat` (short for concatenate) to read the text inside the `readme` file. It printed the password right on the screen.
+
+## Level 1 -> Level 2
+**Command:**
+`cat ./-`
+
+**Explanation:** 
+This one tricked me at first. The file is just named `-`. If you just type `cat -`, the terminal freezes because it thinks the dash is a command option. I had to put `./` in front of it to tell Linux, "Look in my current folder for a file literally named dash." 
+
+## Level 2 -> Level 3
+**Command:**
+`cat "spaces in this filename"`
+
+**Explanation:** 
+I learned that the Linux terminal uses spaces to separate commands. When I tried to read this file normally, it gave me an error because it thought I was trying to read four different files! Putting quotation marks around the whole name forced it to read it as one single file name.
+
+## Level 3 -> Level 4
+**Commands:**
+`cd inhere`
+`ls -a`
+`cat ...Hiding-From-You`
+
+**Explanation:** 
+First, I used `cd` to move into the `inhere` directory. When I typed `ls`, it was empty! I learned that files starting with a dot are hidden. I used `ls -a` (to show all files), found the hidden file, and read it with `cat`.
+
+## Level 4 -> Level 5
+**Commands:**
+`file ./*`
+`cat ./-file07`
+
+**Explanation:** 
+There were 10 files starting with dashes. If you try to `cat` a binary data file, it  messes up the terminal. I used `file ./*` to scan every file in the folder to see what kind of data they held. Once I saw that `-file07` was the only "ASCII text" file, I used `cat` (with the `./` trick from Level 1) to read it.
+
+## Level 5 -> Level 6
+**Commands:**
+`find . -type f -size 1033c`
+`cat ./maybehere07/.file2`
+
+**Explanation:** 
+There were way too many folders to look through manually. I used the `find` command to do it for me. I told it to look in my current folder (`.`), only look for files (`-type f`), and find the one that was exactly 1033 bytes (`-size 1033c`). It spit out the exact path to the file, and I just used `cat` to read it.
+
+## Level 6 -> Level 7
+**Commands:**
+`find / -user bandit7 -group bandit6 -size 33c 2>/dev/null`
+`cat /var/lib/dpkg/info/bandit7.password`
+
+**Explanation:** 
+This file was hidden somewhere on the entire server, so I had to start `find` at the root directory (`/`). I filtered it by the user, group, and size (33 bytes) given in the instructions. Because I searched the whole computer, it tried to give me thousands of "Permission denied" errors. The `2>/dev/null` part is a trick to throw all those error messages into a digital black hole so I could easily see the one correct file path it found.
+
+## Level 7 -> Level 8
+**Command:**
+`grep "millionth" data.txt`
+
+**Explanation:** 
+This file had thousands of lines of text in it. I used the `grep` search tool. I told it to look inside `data.txt` and filter out everything except the line containing the word "millionth". 
+
+## Level 8 -> Level 9
+**Command:**
+`sort data.txt | uniq -u`
+
+**Explanation:** 
+I had to find the only password in the file that wasn't duplicated. I learned how to connect commands together using a pipe (`|`). First, I used `sort` to organize the file alphabetically, which put all the duplicate passwords right next to each other. Then I piped that list into `uniq -u`, which filtered out everything except the one completely unique line.
+
+## Level 9 -> Level 10
+**Command:**
+`strings data.txt | grep "===="`
+
+**Explanation:** 
+This was another binary file full of extra characters. I used the `strings` command, which ignores the computer gibberish and only pulls out readable text words. I piped that readable text over to `grep` to search for the equal signs ("===="), and the password was right next to them.
+
+## Level 10 -> Level 11
+**Command:**
+`base64 -d data.txt`
+
+**Explanation:** 
+The password in this file looked like a random string of text because it was encoded in Base64 (a way computers translate binary data into standard text). I used the `base64` command with the `-d` flag to decode it back into the readable password.
